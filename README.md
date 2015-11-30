@@ -8,4 +8,4 @@ MapSurfer.NET-CartoCSS is a reader of map styles written in a CartoCSS-like lang
 
 ## Installation
 This library can be used as a plugin for MapSurfer.NET. In order MapSurfer.NET could detect this library, it should be installed/copied into the following folder:
-**MapSurfer.NET Installation Folder**\Core\Plugins\StylingFormats\CartoCSS
+**MapSurfer.NET Installation Folder**\Core\Plugins\StylingFormats\CartoCSS 
