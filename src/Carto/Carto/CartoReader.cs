@@ -70,6 +70,22 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       {
         case ".mml":
           cartoProject = JsonConvert.DeserializeObject<CartoProject>(fileContent);
+
+          try
+          {
+            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(cartoProject.Interactivity.ToString());
+            cartoProject.Interactivity = dict;
+          }
+          catch
+          { }
+
+          try
+          {
+            bool enabled = JsonConvert.DeserializeObject<bool>(cartoProject.Interactivity.ToString());
+            cartoProject.Interactivity = enabled;
+          }
+          catch
+          { }
           break;
         case ".yaml":
           using (StringReader input = new StringReader(fileContent))
@@ -123,8 +139,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         }
 
         string interactivityLayer = null;
-        if (cartoProject.Interactivity != null && cartoProject.Interactivity.ContainsKey("layer"))
-        	interactivityLayer = cartoProject.Interactivity["layer"].ToString();
+        if (cartoProject.GetInteractivity() != null && cartoProject.GetInteractivity().ContainsKey("layer"))
+         	interactivityLayer = cartoProject.GetInteractivity()["layer"].ToString();
 
         map = CreateMap(cartoProject, definitions, env, cartoTranslator);
 

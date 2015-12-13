@@ -39,7 +39,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
     [JsonProperty("interactivity")]
     [YamlMember(Alias = "interactivity")]
-    public Dictionary<string, object> Interactivity { get; set; }
+    public object Interactivity { get; set; }
 
     [JsonProperty("minzoom")]
     [YamlMember(Alias = "minzoom")]
@@ -92,6 +92,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     [YamlMember(Alias = "_parts")]
     [YamlIgnore]
     public CartoParts _Parts { get; set; }
+
+    public Dictionary<string, object> GetInteractivity()
+    {
+      return Interactivity as Dictionary<string, object>;
+    }
   }
 
   internal class CartoParts : Dictionary<string, Dictionary<string, string>>

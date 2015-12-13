@@ -45,26 +45,20 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
   	}
   	
   	public CartoDimension(Node value, string unit, NodeLocation index):
-  		base(ParseFloat(value), unit)
+  		base(value.ToCSS(new Env()), unit)
     {
-    	Value = ParseFloat(value);
-    	Unit = unit;
+    //	Value = ParseFloat(value);
+    //	Unit = unit;
     	m_index = index;
     }
   	
   	public CartoDimension(string value, string unit, NodeLocation index):
   		base(value, unit)
     {
-    	Value = Convert.ToSingle(value);
-    	Unit = unit;
+    	//Value = Convert.ToSingle(value);
+    	//Unit = unit;
     	m_index = index;
     }
-  	
-  	private static float ParseFloat(Node node)
-  	{
-  		throw new NotImplementedException();
-  		return 1.0F;
-  	}
  	
   	public float Round()
   	{
@@ -100,32 +94,35 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 			
 			return this;
 		}
-		
-		public new Node Operate(Operation op, Node other)
-    {
-			CartoDimension dim = other as CartoDimension;
-			
-			if ("%".Equals(Unit) && ("%".Equals(dim.Unit)))
-			{
-				//env.Logger.Error("If two operands differ, the first must not be %");
-				return null;
-			}
-				
-			if (!"%".Equals(Unit) && "%".Equals(dim.Unit)) {
-				if (op.Operator.Equals("*") || op.Operator.Equals("/") || op.Operator.Equals("%")) {
-						//env.Logger.Error("Percent values can only be added or subtracted from other values");
-						return null;
-				}
 
-				return new CartoDimension(new Operation(op.Operator, new CartoFieldNode(Value.ToString()), new CartoFieldNode((Value * dim.Value * 0.01).ToString())),
-                Unit, m_index);
+    public new Node Operate(Operation op, Node other)
+    {
+      CartoDimension dim = other as CartoDimension;
+
+      if ("%".Equals(Unit) && ("%".Equals(dim.Unit)))
+      {
+        //env.Logger.Error("If two operands differ, the first must not be %");
+        return null;
       }
-			
-			  //here the operands are either the same (% or undefined or px), or one is undefined and the other is px
-			 
-			  return new CartoDimension(new Operation(op.Operator, new CartoFieldNode(Value.ToString()), new CartoFieldNode(dim.Value.ToString())),
-			                            Unit ?? dim.Unit, m_index);
-		}
+
+      if (!"%".Equals(Unit) && "%".Equals(dim.Unit))
+      {
+        if (op.Operator.Equals("*") || op.Operator.Equals("/") || op.Operator.Equals("%"))
+        {
+          //env.Logger.Error("Percent values can only be added or subtracted from other values");
+          return null;
+        }
+
+        Operation op2 = new Operation(op.Operator, new Number(Value.ToString(), Unit), new Number((Value * dim.Value * 0.01).ToString(), Unit));
+
+        return new CartoDimension(op2, Unit, m_index);
+      }
+
+      //here the operands are either the same (% or undefined or px), or one is undefined and the other is px
+
+      Operation op3 = new Operation(op.Operator, new Number(Value.ToString(), Unit), new Number(dim.Value.ToString(), Unit));
+      return new CartoDimension(op3, Unit ?? dim.Unit, m_index);
+    }
 		
 		private bool Contains(String[] list, String value)
 		{
