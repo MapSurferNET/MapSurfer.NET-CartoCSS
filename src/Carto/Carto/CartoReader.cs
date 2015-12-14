@@ -17,6 +17,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
+using ProjNet.CoordinateSystems;
+
 using Newtonsoft.Json;
 
 using YamlDotNet.Core;
@@ -36,6 +38,8 @@ using MapSurfer.Rendering;
 using MapSurfer.Labeling;
 using MapSurfer.Drawing.Drawing2D;
 using MapSurfer.Drawing.Text;
+using MapSurfer.CoordinateSystems;
+using MapSurfer.CoordinateSystems.Transformations;
 using MapSurfer.Styling.Formats.CartoCSS.Parser;
 using MapSurfer.Styling.Formats.CartoCSS.Parser.Infrastructure;
 using MapSurfer.Styling.Formats.CartoCSS.Parser.Tree;
@@ -208,6 +212,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     private static Map CreateMap(CartoProject project, List<CartoDefinition> definitions, Env env, ICartoTranslator cartoTranslator)
     {
       Map map = new Map(project.Name);
+      map.Size = new SizeF(700, 500);
       map.MinimumScale = ConvertUtility.ToScaleDenominator(project.MinZoom);
       map.MaximumScale = ConvertUtility.ToScaleDenominator(project.MaxZoom);
 			 
@@ -220,16 +225,20 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
       if (project.Center != null)
       {
-        if (map.CoordinateSystem != null)
+        if (map.CoordinateSystem == null)
         {
-          double scale = MapSurfer.Utilities.MapUtility.ZoomToScaleDenominator(Convert.ToDouble(project.Center[2]));
-          GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation trans = MapSurfer.CoordinateSystems.Transformations.CoordinateTransformationFactory.CreateCoordinateTransformation(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84, map.CoordinateSystem);
-          double cx = Convert.ToDouble(project.Center[0]);
-          double cy = Convert.ToDouble(project.Center[1]);
-          double cz = 0;
-          trans.MathTransform.Transform(ref cx, ref cy, ref cz);
-          map.SetCenterAndZoom(cx, cy, scale);
+          CoordinateSystemFactory csFactory = new CoordinateSystemFactory();
+          map.CoordinateSystem = (CoordinateSystem)csFactory.CreateSphericalMercatorCoordinateSystem();
         }
+
+        double cx = Convert.ToDouble(project.Center[0]);
+        double cy = Convert.ToDouble(project.Center[1]);
+        double cz = Convert.ToDouble(project.Center[2]);
+
+        double scale = MapSurfer.Utilities.MapUtility.GetTileMapResolution(cz);
+        GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation trans = CoordinateTransformationFactory.CreateCoordinateTransformation(GeographicCoordinateSystem.WGS84, map.CoordinateSystem);
+        trans.MathTransform.Transform(ref cx, ref cy, ref cz);
+        map.SetCenterAndZoom(cx, cy, scale);
       }
 
       return map;
