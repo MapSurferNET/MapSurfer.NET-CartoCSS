@@ -22,32 +22,6 @@
   ],
   "Layer": [
     {
-      "name": "water-lines",
-      "srs-name": "900913",
-      "geometry": "linestring",
-      "class": "water-lines",
-      "id": "water-lines",
-      "srs": "+proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0.0 +k=1.0 +units=m +nadgrids=@null +wktext +no_defs +over",
-      "Datasource": {
-        "extent": "-20037508,-20037508,20037508,20037508",
-        "table": "(SELECT\n    way, waterway, name, intermittent,\n    CASE WHEN tunnel IN ('yes', 'culvert') THEN 'yes' ELSE 'no' END AS int_tunnel,\n    'no' AS bridge\n  FROM planet_osm_line\n  WHERE waterway IN ('river', 'canal', 'derelict_canal', 'stream', 'drain', 'ditch', 'wadi')\n    AND (bridge IS NULL OR bridge NOT IN ('yes', 'aqueduct'))\n  ORDER BY z_order\n) AS water_lines",
-        "geometry_field": "way",
-        "type": "postgis",
-        "key_field": "",
-        "dbname": "gis"
-      },
-      "extent": [
-        -180,
-        -85.05112877980659,
-        180,
-        85.05112877980659
-      ],
-      "properties": {
-        "minzoom": 12
-      },
-      "advanced": {}
-    },
-    {
       "id": "countries",
       "name": "countries",
       "srs": "",

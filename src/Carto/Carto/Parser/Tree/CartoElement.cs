@@ -25,19 +25,25 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
     {
       string strValue = value.ToString().Trim();
 
-      if (strValue[0] == '#')
+      if (string.IsNullOrEmpty(strValue))
       {
-        Value = strValue.Remove(0,1);
+        m_type = ElementType.Unknown;
+        if (strValue != null)
+          Value = "\"\"";
+      }
+      else if (strValue[0] == '#')
+      {
+        Value = strValue.Remove(0, 1);
         m_type = ElementType.Id;
       }
       else if (strValue[0] == '.')
       {
-        Value = strValue.Remove(0,1);
+        Value = strValue.Remove(0, 1);
         m_type = ElementType.Class;
       }
       else if (strValue.Contains('*'))
       {
-         m_type = ElementType.Wildchar;
+        m_type = ElementType.Wildchar;
       }
     }
 

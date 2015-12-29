@@ -28,16 +28,22 @@
     <Externalconsole>true</Externalconsole>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GeoAPI, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\GeoAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MapSurfer.Core, Version=2.40.5827.36048, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MapSurfer.System, Version=2.40.5827.36023, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.System.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="MapSurfer.Core">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.3\lib\net45\Core\MapSurfer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MapSurfer.System">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.3\lib\net45\Core\MapSurfer.System.dll</HintPath>
-    </Reference>
     <Reference Include="YamlDotNet">
       <HintPath>..\..\packages\YamlDotNet.3.7.0\lib\net35\YamlDotNet.dll</HintPath>
     </Reference>
@@ -49,12 +55,15 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\src\Carto\MapSurfer.Styling.CartoCSS.csproj">
-      <Project>{718EA398-76D4-4169-9AF6-FCCC8F88F675}</Project>
+      <Project>{718ea398-76d4-4169-9af6-fccc8f88f675}</Project>
       <Name>MapSurfer.Styling.CartoCSS</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\dotless\src\dotless.Core\dotless.Core.csproj">
       <Project>{D7A24E58-68D0-4B10-A324-EA33C822FA56}</Project>
       <Name>dotless.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

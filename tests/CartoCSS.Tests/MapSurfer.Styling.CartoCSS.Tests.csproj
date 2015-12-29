@@ -36,33 +36,45 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="GeoAPI, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\GeoAPI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MapSurfer.Core, Version=2.40.5827.36048, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MapSurfer.Data, Version=2.40.5784.20159, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MapSurfer.Drawing, Version=2.40.5784.20153, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Drawing.dll</HintPath>
+    </Reference>
+    <Reference Include="MapSurfer.System, Version=2.40.5827.36023, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.System.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="nunit.framework">
       <HintPath>..\..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="MapSurfer.Drawing">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.3\lib\net45\Core\MapSurfer.Drawing.dll</HintPath>
-    </Reference>
-    <Reference Include="MapSurfer.Core">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.3\lib\net45\Core\MapSurfer.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="MapSurfer.System">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.3\lib\net45\Core\MapSurfer.System.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Carto\MapSurfer.Styling.CartoCSS.csproj">
-      <Project>{718EA398-76D4-4169-9AF6-FCCC8F88F675}</Project>
-      <Name>MapSurfer.Styling.CartoCSS</Name>
-    </ProjectReference>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+    <ProjectReference Include="..\..\src\Carto\MapSurfer.Styling.CartoCSS.csproj">
+      <Project>{718ea398-76d4-4169-9af6-fccc8f88f675}</Project>
+      <Name>MapSurfer.Styling.CartoCSS</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

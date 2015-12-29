@@ -446,8 +446,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       var index = parser.Tokenizer.Location.Index;
 
-      // TODO change to  $(/^(-?\d*\.?\d+(?:[eE][-+]?\d+)?)(\%|\w+)?/);
-      var value = parser.Tokenizer.Match(@"(-?[0-9]*\.?[0-9]+)(px|%|em|pc|ex|in|deg|s|ms|pt|cm|mm|ch|rem|vw|vh|vmin|vm|grad|rad|fr|gr|Hz|kHz|dpi|dpcm|dppx)?");
+      var value = parser.Tokenizer.Match(@"^(-?\d*\.?\d+(?:[eE][-+]?\d+)?)(\%|\w+)?");
 
       if (value)
         return new CartoDimension(value[1], value[2], parser.Tokenizer.GetNodeLocation(index));

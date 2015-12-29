@@ -79,7 +79,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     public static string QuoteValue(string value)
     {
       if (string.IsNullOrEmpty(value))
-        return value;
+        return (value == null) ? null : "\"\"";
 
       if (value.StartsWith("[") && value.EndsWith("]"))
         return value;
