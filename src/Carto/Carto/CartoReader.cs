@@ -422,7 +422,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
             }
 
             Rule rule = new Rule();
-            rule.Filter = ConvertUtility.ToFilter(def.Filters);
+            rule.Filter = ConvertUtility.ToFilter(def.Filters, cartoTranslator);
             rule.Name = cartoRule.Instance;
 
             if (startZoom > 0)

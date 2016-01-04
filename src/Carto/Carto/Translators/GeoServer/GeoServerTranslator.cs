@@ -115,6 +115,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.GeoServer
     {
       throw new NotImplementedException();
     }
+    
+		public override string ToFilter(string key, string op, string value)
+		{
+			throw new NotImplementedException();
+		}
             
     public override void ProcessStyles(FeatureTypeStyleCollection styles)
     {

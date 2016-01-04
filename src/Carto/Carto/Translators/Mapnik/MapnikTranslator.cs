@@ -1247,6 +1247,59 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
 				}
 			}
 		}
+		
+		public override string ToFilter(string key, string op, string value)
+		{
+			bool bAddSquareBrackets = true;
+			if (key != null && key.Contains("mapnik::geometry_type"))
+			{
+				// Here, we convert expressions such as ['mapnik::geometry_type'=2]  to
+				// [_geom_].OgcGeometryType = OgcGeometryType.LineString
+
+				key = "[_geom_].OgcGeometryType";
+				
+				int intValue = -1;
+				if (int.TryParse(value, out intValue))
+					value = NumberToGeometryType(intValue);
+				else
+					value = "OgcGeometryType." + value;
+				
+				bAddSquareBrackets = false;
+			}
+			
+			return (bAddSquareBrackets ? ("[" + key  + "]") : key) + " " + op + " " + value;
+		}
+		
+		/// <summary>
+		/// Converts geometry type constants to their string representation.
+		/// see https://github.com/mapnik/mapnik/blob/master/include/mapnik/geometry_types.hpp
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		private string NumberToGeometryType(int value)
+		{
+			switch (value)
+			{
+				case 0:
+					return "Unknown";
+				case 1:
+					return "OgcGeometryType.Point";
+				case 2:
+					return "OgcGeometryType.LineString";
+				case 3:
+					return "OgcGeometryType.Polygon";
+				case 4:
+					return "OgcGeometryType.MultiPoint";
+				case 5:
+					return "OgcGeometryType.MultiLineString";
+				case 6:
+					return "OgcGeometryType.MultiPolygon";
+				case 7:
+					return "OgcGeometryType.GeometryCollection";
+			}
+			
+			return value.ToString();
+		}
 
 		private string RemoveQuotes(string value)
 		{

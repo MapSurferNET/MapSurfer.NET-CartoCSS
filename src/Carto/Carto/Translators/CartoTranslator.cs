@@ -134,6 +134,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 
     public abstract string ToPath(string url);
     
+    public abstract string ToFilter(string key, string op, string value);
+    
     public abstract void ProcessStyles(FeatureTypeStyleCollection styles);
   }
 }

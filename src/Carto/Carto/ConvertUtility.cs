@@ -12,12 +12,13 @@ using dotless.Core.Parser.Infrastructure.Nodes;
 using dotless.Core.Parser.Tree;
 
 using MapSurfer.Styling.Formats.CartoCSS.Parser.Tree;
+using MapSurfer.Styling.Formats.CartoCSS.Translators;
 
 namespace MapSurfer.Styling.Formats.CartoCSS
 {
   internal static class ConvertUtility
   {
-    public static string ToFilter(CartoFilterSet filterSet)
+    public static string ToFilter(CartoFilterSet filterSet, ICartoTranslator cartoTranslator)
     {
       string result = string.Empty;
 
@@ -29,7 +30,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
           if (i != 0)
             result += " and ";
 
-          result += "[" + filter.Key + "]" + ToExpressionOperator(filter.Op) + ToExpressionValue(filter.Value);
+          result += cartoTranslator.ToFilter(filter.Key.ToString(), ToExpressionOperator(filter.Op), ToExpressionValue(filter.Value));
           i++;
         }
       }

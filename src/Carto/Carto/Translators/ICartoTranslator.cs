@@ -36,6 +36,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 
     string ToPath(string url);
     
+    string ToFilter(string key, string op, string value);
+    
     void ProcessStyles(FeatureTypeStyleCollection styles);
   }
 }
