@@ -19,81 +19,81 @@ using dotless.Core.Parser;
 
 namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 {
-  internal class CartoDimension: Number, IOperable 
+  internal class CartoDimension : Number, IOperable
   {
-  	private readonly string[] physical_units = new string[] {"m", "cm", "in", "mm", "pt", "pc"};
-  	private readonly string[] screen_units = new string[] {"px", "%"};
-  	private readonly string[] all_units = new string[] {"m", "cm", "in", "mm", "pt", "pc", "px", "%"};
-   	private static Dictionary<string, float> densities = null;
-   	private static float DPI;
-   	
-  	private NodeLocation m_index;
-  	
-  	static CartoDimension()
-  	{
-  		densities = new Dictionary<string, float>();
-  		densities.Add("m",0.0254f);
-  		densities.Add("mm",25.4f);
-  		densities.Add("cm",2.54f);
-  		densities.Add("pt",72);
-  		densities.Add("pc",6);
-  		
-  		using(System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
-  		{
-  			DPI = g.DpiX;
-  		}
-  	}
-  	
-  	public CartoDimension(Node value, string unit, NodeLocation index):
-  		base(value.ToCSS(new Env()), unit)
-    {
-    //	Value = ParseFloat(value);
-    //	Unit = unit;
-    	m_index = index;
-    }
-  	
-  	public CartoDimension(string value, string unit, NodeLocation index):
-  		base(value, unit)
-    {
-    	//Value = Convert.ToSingle(value);
-    	//Unit = unit;
-    	m_index = index;
-    }
- 	
-  	public float Round()
-  	{
-  		return (float)Math.Round(Value);
-  	}
-  	
-  	public  Color ToColor()
-  	{
-  		return new Color(Value, Value, Value);
-  	}
-  	
-		public override dotless.Core.Parser.Infrastructure.Nodes.Node Evaluate(dotless.Core.Parser.Infrastructure.Env env)
-		{
-			if (!string.IsNullOrEmpty(Unit) && ! Contains(all_units, Unit))
-			{
-				env.Logger.Error("Invalid unit: '" + Unit + "'");
-			}
-			
-			if (!string.IsNullOrEmpty(Unit) && ! Contains(physical_units, Unit))
-			{
-				   //if (!env.ppi)
+    private readonly string[] physical_units = new string[] { "m", "cm", "in", "mm", "pt", "pc" };
+    private readonly string[] screen_units = new string[] { "px", "%" };
+    private readonly string[] all_units = new string[] { "m", "cm", "in", "mm", "pt", "pc", "px", "%" };
+    private static Dictionary<string, float> densities = null;
+    private static float DPI;
 
-				   // convert all units to inch
-           // convert inch to px using ppi
-           if (!"px".Equals(Unit))
-           {
-           		Value = (Value / densities[Unit])*DPI;
-				   		//m_unit = "px";
-           }
-           
-           Unit = "";
-			}
-			
-			return this;
-		}
+    private NodeLocation m_index;
+
+    static CartoDimension()
+    {
+      densities = new Dictionary<string, float>();
+      densities.Add("m", 0.0254f);
+      densities.Add("mm", 25.4f);
+      densities.Add("cm", 2.54f);
+      densities.Add("pt", 72);
+      densities.Add("pc", 6);
+
+      using (System.Drawing.Graphics g = System.Drawing.Graphics.FromHwnd(IntPtr.Zero))
+      {
+        DPI = g.DpiX;
+      }
+    }
+
+    public CartoDimension(Node value, string unit, NodeLocation index) :
+      base(value.ToCSS(new Env()), unit)
+    {
+      //	Value = ParseFloat(value);
+      //	Unit = unit;
+      m_index = index;
+    }
+
+    public CartoDimension(string value, string unit, NodeLocation index) :
+      base(value, unit)
+    {
+      //Value = Convert.ToSingle(value);
+      //Unit = unit;
+      m_index = index;
+    }
+
+    public float Round()
+    {
+      return (float)Math.Round(Value);
+    }
+
+    public Color ToColor()
+    {
+      return new Color(Value, Value, Value);
+    }
+
+    public override dotless.Core.Parser.Infrastructure.Nodes.Node Evaluate(dotless.Core.Parser.Infrastructure.Env env)
+    {
+      if (!string.IsNullOrEmpty(Unit) && !Contains(all_units, Unit))
+      {
+        env.Logger.Error("Invalid unit: '" + Unit + "'");
+      }
+
+      if (!string.IsNullOrEmpty(Unit) && Contains(physical_units, Unit))
+      {
+        //if (!env.ppi)
+
+        // convert all units to inch
+        // convert inch to px using ppi
+        if (!"px".Equals(Unit))
+        {
+          Value = (Value / densities[Unit]) * DPI;
+          //m_unit = "px";
+        }
+
+        Unit = "";
+      }
+
+      return this;
+    }
 
     public new Node Operate(Operation op, Node other)
     {
@@ -123,14 +123,14 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       Operation op3 = new Operation(op.Operator, new Number(Value.ToString(), Unit), new Number(dim.Value.ToString(), Unit));
       return new CartoDimension(op3, Unit ?? dim.Unit, m_index);
     }
-		
-		private bool Contains(String[] list, String value)
-		{
-			foreach(string str in list)
-				if (str.Equals(value))
-					return true;
-				
-				return false;
-		}
+
+    private bool Contains(String[] list, String value)
+    {
+      foreach (string str in list)
+        if (str.Equals(value))
+          return true;
+
+      return false;
+    }
   }
 }

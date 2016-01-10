@@ -156,10 +156,37 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     }
   }
 
-  internal class CartoDatasource : Dictionary<string, string> 
+  internal class CartoDatasource : Dictionary<string, object> 
   {
     public CartoDatasource()
     {
+    }
+
+    public bool TryGetValue(string key, out string value)
+    {
+      object objValue;
+      if (base.TryGetValue(key, out objValue))
+      {
+        value = objValue as string;
+        return true;
+      }
+
+      value = null;
+      return false;
+    }
+
+    public string this[string key]
+    {
+      get
+      {
+        object value;
+        if (base.TryGetValue(key, out value))
+        {
+          return value as string;
+        }
+
+        return null;
+      }
     }
 
     public string Type
@@ -186,6 +213,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS
               case ".csv":
               case ".kml":
                 return "OGR";
+              case "*.gpx":
+                if (MapSurfer.Data.Providers.DataSourceProviderManager.Contains("GPX"))
+                  return "GPX";
+                else
+                  return "OGR";
               default:
                 break;
             }

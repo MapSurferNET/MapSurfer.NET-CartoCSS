@@ -63,7 +63,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     #endregion
 
     private static ConcurrentDictionary<string, FontSet> _dictFontSets = new ConcurrentDictionary<string, FontSet>();
-    
+
     public static Map ReadFromFile(string fileContent, string fileName)
     {
       string path = Path.GetDirectoryName(fileName);
@@ -75,21 +75,24 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         case ".mml":
           cartoProject = JsonConvert.DeserializeObject<CartoProject>(fileContent);
 
-          try
+          if (cartoProject.Interactivity != null)
           {
-            Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(cartoProject.Interactivity.ToString());
-            cartoProject.Interactivity = dict;
-          }
-          catch
-          { }
+            try
+            {
+              Dictionary<string, object> dict = JsonConvert.DeserializeObject<Dictionary<string, object>>(cartoProject.Interactivity.ToString());
+              cartoProject.Interactivity = dict;
+            }
+            catch
+            { }
 
-          try
-          {
-            bool enabled = JsonConvert.DeserializeObject<bool>(cartoProject.Interactivity.ToString());
-            cartoProject.Interactivity = enabled;
+            try
+            {
+              bool enabled = JsonConvert.DeserializeObject<bool>(cartoProject.Interactivity.ToString());
+              cartoProject.Interactivity = enabled;
+            }
+            catch
+            { }
           }
-          catch
-          { }
           break;
         case ".yaml":
           using (StringReader input = new StringReader(fileContent))
@@ -101,7 +104,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
           break;
         default:
           throw new Exception("Unknown extension of the CartoCSS project.");
-    }
+      }
 
       Map map = null;
 
@@ -111,7 +114,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
         CartoParser parser = new CartoParser();
         parser.NodeProvider = new CartoNodeProvider();
-        Env env = new Env(); 
+        Env env = new Env();
         List<Ruleset> ruleSets = new List<Ruleset>();
         List<CartoDefinition> definitions = new List<CartoDefinition>();
 
@@ -132,6 +135,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
             defs.Sort(new SpecificitySorter());
 
             definitions.AddRange(defs);
+
             env.Frames.Push(ruleSet);
           }
           catch (Exception ex)
@@ -144,7 +148,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
         string interactivityLayer = null;
         if (cartoProject.GetInteractivity() != null && cartoProject.GetInteractivity().ContainsKey("layer"))
-         	interactivityLayer = cartoProject.GetInteractivity()["layer"].ToString();
+          interactivityLayer = cartoProject.GetInteractivity()["layer"].ToString();
 
         map = CreateMap(cartoProject, definitions, env, cartoTranslator);
 
@@ -160,35 +164,35 @@ namespace MapSurfer.Styling.Formats.CartoCSS
             for (int i = 0; i < classes.Length; i++)
               classIndex[classes[i]] = true;
 
-			      var matching = definitions.FindAll(delegate (CartoDefinition def) { return def.AppliesTo(cartoLayer.Name, classIndex); });
-			      
-			      if (matching.Count > 0)
-			      {
-			      	List<CartoStyle> rules = InheritDefinitions(matching, env);
+            var matching = definitions.FindAll(delegate (CartoDefinition def) { return def.AppliesTo(cartoLayer.Name, classIndex); });
 
-			      	if (rules.Count > 0)
-			      	{
-			      		SortStyles(rules, env);
+            if (matching.Count > 0)
+            {
+              List<CartoStyle> rules = InheritDefinitions(matching, env);
 
-			      		for (int k = 0; k < rules.Count; k++)
-			      		{
-			      			CartoStyle cartoStyle = rules[k];
-			      			cartoStyle.Fold(env);
-			      			string styleName = cartoLayer.Name + (cartoStyle.Attachment != "__default__" ? "-" + cartoStyle.Attachment : "");
-			      			FeatureTypeStyle style = CreateStyle(styleName, cartoStyle, env, cartoTranslator);
+              if (rules.Count > 0)
+              {
+                SortStyles(rules, env);
 
-			      			if (style.Rules.Count > 0)
-			      				styledLayer.Styles.Add(style);
-			      		}
-			      		
-			      		cartoTranslator.ProcessStyles(styledLayer.Styles);
-			      	}
-			      	
-			      	if (!string.IsNullOrEmpty(interactivityLayer) && interactivityLayer.Equals(styledLayer.Name))
-			      		styledLayer.Enabled = false;
+                for (int k = 0; k < rules.Count; k++)
+                {
+                  CartoStyle cartoStyle = rules[k];
+                  cartoStyle.Fold(env);
+                  string styleName = cartoLayer.Name + (cartoStyle.Attachment != "__default__" ? "-" + cartoStyle.Attachment : "");
+                  FeatureTypeStyle style = CreateStyle(styleName, cartoStyle, env, cartoTranslator);
 
-			      	map.AddLayer(styledLayer);
-			      }
+                  if (style.Rules.Count > 0)
+                    styledLayer.Styles.Add(style);
+                }
+
+                cartoTranslator.ProcessStyles(styledLayer.Styles);
+              }
+
+              if (!string.IsNullOrEmpty(interactivityLayer) && interactivityLayer.Equals(styledLayer.Name))
+                styledLayer.Enabled = false;
+
+              map.AddLayer(styledLayer);
+            }
           }
           catch (Exception ex)
           {
@@ -215,10 +219,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       map.Size = new SizeF(700, 500);
       map.MinimumScale = ConvertUtility.ToScaleDenominator(project.MinZoom);
       map.MaximumScale = ConvertUtility.ToScaleDenominator(project.MaxZoom);
-			 
-     // if (project.Bounds != null)
-     //   map.WGS84Bounds = project.Bounds[0] + "," + project.Bounds[1] + "," + project.Bounds[2] + "," + project.Bounds[3];
-      map.CRS = cartoTranslator.ToCoordinateSystem(string.IsNullOrEmpty(project.Srs) ? project.SrsName: project.Srs, !string.IsNullOrEmpty(project.SrsName));
+
+      // if (project.Bounds != null)
+      //   map.WGS84Bounds = project.Bounds[0] + "," + project.Bounds[1] + "," + project.Bounds[2] + "," + project.Bounds[3];
+      map.CRS = cartoTranslator.ToCoordinateSystem(string.IsNullOrEmpty(project.Srs) ? project.SrsName : project.Srs, !string.IsNullOrEmpty(project.SrsName));
 
       SetMapProperties(map, GetProperties(definitions, env, "Map"), cartoTranslator);
       SetFontSets(map, definitions, env, cartoTranslator);
@@ -267,15 +271,15 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         if (cartoLayer.Properties.ContainsKey("cache-features")) // Extension
           layer.FeaturesCaching.Enabled = Convert.ToBoolean(cartoLayer.Properties["cache-features"]);
       }
-      
-     	layer.Enabled = cartoLayer.Status != "off";
+
+      layer.Enabled = cartoLayer.Status != "off";
 
       string providerName = parameters.GetValue("Type");
       if (string.IsNullOrEmpty(providerName))
         LogFactory.WriteLogEntry(Logger.Default, new IOException(string.Format("Unable to detect the type of a data source provider for the layer '{0}'.", cartoLayer.Name)));
 
-      if(!string.IsNullOrEmpty(cartoLayer.Srs))
-         layer.CRS = cartoTranslator.ToCoordinateSystem(string.IsNullOrEmpty(cartoLayer.Srs) ? cartoLayer.SrsName : cartoLayer.Srs, !string.IsNullOrEmpty(cartoLayer.SrsName));
+      if (!string.IsNullOrEmpty(cartoLayer.Srs))
+        layer.CRS = cartoTranslator.ToCoordinateSystem(string.IsNullOrEmpty(cartoLayer.Srs) ? cartoLayer.SrsName : cartoLayer.Srs, !string.IsNullOrEmpty(cartoLayer.SrsName));
 
       return layer;
     }
@@ -355,7 +359,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
               style.ProcessFeatureOnce = false;
             else if (string.Equals(filterMode, "first"))
               style.ProcessFeatureOnce = true;
-            
+
             k++;
           }
         }
@@ -396,7 +400,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       {
         CartoRule cartoRule = rules[i];
         zooms.Rule = cartoRule.Zoom;
-        
+
         if ((existingFilters[filter] & zooms.Rule) == 0)
           continue;
 
@@ -436,11 +440,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
             // Check whether the rule has at least one visible symbolizer
             if (rule.Symbolizers.Count > 0 && rule.Symbolizers.Any(s => s.Enabled == true))
-               style.Rules.Add(rule);
+              style.Rules.Add(rule);
           }
         }
       }
-      
+
       //style.Rules.Sort(new RuleComparer());
     }
 
@@ -468,7 +472,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       // Get a simple list of the symbolizers, in order
       symOrder.Sort(delegate (KeyValuePair<string, int> a, KeyValuePair<string, int> b) { return a.Value.CompareTo(b.Value); });
 
-      foreach(KeyValuePair<string, int> kv in symOrder)
+      foreach (KeyValuePair<string, int> kv in symOrder)
       {
         var attributes = symbolizers[kv.Key];
         var symbolizer = kv.Key.Split('/')[1];
@@ -549,7 +553,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     {
       List<FontSet> fontSets = new List<FontSet>();
       Dictionary<string, FontSet> dictFontSets = new Dictionary<string, FontSet>();
-      
+
       using (FontFamilyCollection fontCollection = FontUtility.GetFontFamilyCollection())
       {
         List<FontFamilyTypeface> typeFaces = new List<FontFamilyTypeface>();
@@ -791,8 +795,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       int size = 256;
       if (properties.TryGetValue("buffer-size", out paramValue))
         size = Convert.ToInt32(paramValue);
-      
-     	map.Padding = new Size(size, size);
+
+      map.Padding = new Size(size, size);
 
       if (properties.TryGetValue("buffer-image-size", out paramValue)) // Extension
       {
@@ -819,15 +823,15 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
       // Evaluate the filters specified by each definition with the given
       // environment to correctly resolve variable references
-      definitions.ForEach(delegate(CartoDefinition def) {
-           def.Filters.Evaluate(env);
+      definitions.ForEach(delegate (CartoDefinition def) {
+        def.Filters.Evaluate(env);
       });
 
       current = new List<CartoDefinition>();
 
       for (int i = 0; i < definitions.Count; i++)
       {
-      	CartoDefinition defI = definitions[i];
+        CartoDefinition defI = definitions[i];
         attachment = defI.Attachment;
 
         current.Clear();
@@ -841,18 +845,18 @@ namespace MapSurfer.Styling.Formats.CartoCSS
           byAttachment.Add(attachment, style);
           byAttachment[attachment].Attachment = attachment;
           byFilter[attachment] = new SortedDictionary<string, CartoDefinition>();
-          
+
           result.Add(byAttachment[attachment]);
         }
 
         // Iterate over all subsequent rules.
         for (var j = i + 1; j < definitions.Count; j++)
         {
-        	CartoDefinition defJ = definitions[j];
+          CartoDefinition defJ = definitions[j];
           if (defJ.Attachment == attachment)
           {
-              // Only inherit rules from the same attachment.
-              current = AddRules(current, defJ, byFilter[attachment], env);
+            // Only inherit rules from the same attachment.
+            current = AddRules(current, defJ, byFilter[attachment], env);
           }
         }
 
@@ -880,10 +884,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         updatedFilters = current[k].Filters.CloneWith(newFilters, env);
         if (updatedFilters is CartoFilterSet)
         {
-        	string filtersString = (updatedFilters as CartoFilterSet).ToString();
-        	
+          string filtersString = (updatedFilters as CartoFilterSet).ToString();
+
           if (!byFilter.TryGetValue(filtersString, out previous))
-             previous = null;
+            previous = null;
 
           if (previous != null)
           {
@@ -983,7 +987,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
             string key1 = key.Replace("key", "value");
             //  label-settings-solver-param0-key: CoolingSchedule;
             //  label-settings-solver-param0-value: AartsLaarhoven;
- 
+
             if (dict.ContainsKey(key1))
             {
               string value1 = dict[key1];

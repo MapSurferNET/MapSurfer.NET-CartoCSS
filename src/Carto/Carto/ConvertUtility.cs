@@ -73,7 +73,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         Quoted quoted = value as Quoted;
         if (quoted != null)
           result = QuoteValue(quoted.Value.ToString());
+        else
+          result = value.ToString();
       }
+
       return result;
     }
 

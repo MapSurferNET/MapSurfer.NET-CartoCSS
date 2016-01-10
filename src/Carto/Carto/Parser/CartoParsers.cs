@@ -318,18 +318,18 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
     {
       return Dimension(parser) ||
              Color(parser) ||
-      		   HexColor(parser) ||
+             HexColor(parser) ||
              Quoted(parser);
     }
-    
+
     public Node HexColor(CartoParser parser)
     {
-    	RegexMatchResult rgb;
-    	
-    	if (parser.Tokenizer.CurrentChar == '#' && (rgb = parser.Tokenizer.Match(@"@\[a-fA-F0-9]{6}|[a-fA-F0-9]{3})")))
-    		return new dotless.Core.Parser.Tree.Color(rgb.Value);
+      RegexMatchResult rgb;
 
-    	return null;
+      if (parser.Tokenizer.CurrentChar == '#' && (rgb = parser.Tokenizer.Match(@"@\[a-fA-F0-9]{6}|[a-fA-F0-9]{3})")))
+        return new dotless.Core.Parser.Tree.Color(rgb.Value);
+
+      return null;
     }
 
     //
@@ -348,33 +348,17 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       GatherComments(parser);
 
-      Node value = Quoted(parser);
+      Node value = Quoted(parser) || Variable(parser) || parser.Tokenizer.Match(@"^[\-\w%@$\/.&=:;#+?~]+"); // '';
 
-      if (!value)
-      {
-        var memo = Remember(parser);
-        value = Expression(parser);
-
-        if (value && !parser.Tokenizer.Peek(')'))
-        {
-          value = null;
-          Recall(parser, memo);
-        }
-      }
-      else
+      if (value)
       {
         value.PreComments = PullComments();
         value.PostComments = GatherAndPullComments(parser);
       }
 
-      if (!value)
-      {
-        value = parser.Tokenizer.MatchAny(@"[^\)""']*") || new TextNode("");
-      }
-
       Expect(parser, ')');
 
-      return NodeProvider.Url(value, parser.Importer, parser.Tokenizer.GetNodeLocation(index));
+      return NodeProvider.Url(value is Variable ? value : new Quoted(value.ToCSS(Env), false), parser.Importer, parser.Tokenizer.GetNodeLocation(index));
     }
 
     //
@@ -849,15 +833,15 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       PushComments();
       GatherComments(parser); // to collect, combinator must have picked up something which would require memory anyway
-     // Node e = parser.Tokenizer.Match(@"[.#:]?(\\.|[a-zA-Z0-9_-])+") || parser.Tokenizer.Match('*') || parser.Tokenizer.Match('&') || Zoom(parser) || Filter(parser) || Attachment(parser) ||
-     //     Attribute(parser) || parser.Tokenizer.MatchAny(@"\([^)@]+\)") || parser.Tokenizer.Match(@"[\.#](?=@\{)") || VariableCurly(parser);
-     // Node e = Element2(parser) || Zoom(parser) || Filter(parser) || Attachment(parser);
-      //Node e, z, f, a;
-      //bool b = false;
-      //if (e = Element(parser) || (z = Zoom(parser)) || (f = Filter(parser)) || (a = Attachment(parser)) || VariableCurly(parser))
-      //{
-      //  b = true;
-      //}
+                              // Node e = parser.Tokenizer.Match(@"[.#:]?(\\.|[a-zA-Z0-9_-])+") || parser.Tokenizer.Match('*') || parser.Tokenizer.Match('&') || Zoom(parser) || Filter(parser) || Attachment(parser) ||
+                              //     Attribute(parser) || parser.Tokenizer.MatchAny(@"\([^)@]+\)") || parser.Tokenizer.Match(@"[\.#](?=@\{)") || VariableCurly(parser);
+                              // Node e = Element2(parser) || Zoom(parser) || Filter(parser) || Attachment(parser);
+                              //Node e, z, f, a;
+                              //bool b = false;
+                              //if (e = Element(parser) || (z = Zoom(parser)) || (f = Filter(parser)) || (a = Attachment(parser)) || VariableCurly(parser))
+                              //{
+                              //  b = true;
+                              //}
 
       Node e = Element(parser) || Zoom(parser) || Filter(parser) || Attachment(parser) || VariableCurly(parser);
 
@@ -930,7 +914,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
         if (comp != null)
         {
-        	Node value = Variable(parser) || Dimension(parser);
+          Node value = Variable(parser) || Dimension(parser);
 
           if (value != null && parser.Tokenizer.CurrentChar == ']')
           {
@@ -979,7 +963,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
       parser.Tokenizer.Advance(1);
 
       if (key = parser.Tokenizer.Match(@"^[a-zA-Z0-9\-_]+") || Quoted(parser) || Variable(parser) || Keyword(parser))
-      { 
+      {
         if (key is Quoted)
         {
           key = new CartoFieldNode(key.ToString());
@@ -1100,7 +1084,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       if (realElements > 0)
       {
-      	var selector = (NodeProvider as CartoNodeProvider).Selector(elements, parser.Tokenizer.GetNodeLocation(index), Env);
+        var selector = (NodeProvider as CartoNodeProvider).Selector(elements, parser.Tokenizer.GetNodeLocation(index), Env);
         selector.PostComments = GatherAndPullComments(parser);
         PopComments();
         selector.PreComments = PullComments();
@@ -1176,13 +1160,13 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
       var memo = Remember(parser);
       var index = memo.TokenizerLocation.Index;
 
-     /* if (parser.Tokenizer.Peek(@"([a-z.#: _-]+)[\s\n]*\{")) //simple case with no comments
-      {
-        var match = parser.Tokenizer.Match(@"[a-z.#: _-]+");
-        var s = NodeProvider.Selector(new NodeList<Element>(NodeProvider.Element(null, match, parser.Tokenizer.GetNodeLocation(index))), parser.Tokenizer.GetNodeLocation(index));
-        selectors = new NodeList<Selector>(s);
-      }
-      else*/ // Runge
+      /* if (parser.Tokenizer.Peek(@"([a-z.#: _-]+)[\s\n]*\{")) //simple case with no comments
+       {
+         var match = parser.Tokenizer.Match(@"[a-z.#: _-]+");
+         var s = NodeProvider.Selector(new NodeList<Element>(NodeProvider.Element(null, match, parser.Tokenizer.GetNodeLocation(index))), parser.Tokenizer.GetNodeLocation(index));
+         selectors = new NodeList<Selector>(s);
+       }
+       else*/ // Runge
       {
         Selector s;
         while (s = Selector(parser))
@@ -1227,7 +1211,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       char ch = parser.Tokenizer.CurrentChar;
 
-      if (ch == '.' || ch == '#') 
+      if (ch == '.' || ch == '#')
         return null;
 
       Node name, value;

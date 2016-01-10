@@ -81,6 +81,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("shield-fill"),
         new CartoPropertyInfo("shield-size"),
         new CartoPropertyInfo("shield-placement"),
+        new CartoPropertyInfo("shield-placements"),
+        new CartoPropertyInfo("shield-placement-type"),
         new CartoPropertyInfo("shield-avoid-edges"),
         new CartoPropertyInfo("shield-allow-overlap"),
         new CartoPropertyInfo("shield-min-distance"),
