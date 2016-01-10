@@ -99,7 +99,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     }
   }
 
-  internal class CartoParts : Dictionary<string, Dictionary<string, string>>
+  internal class CartoParts : Dictionary<string, Dictionary<string, object>>
   {
   }
 

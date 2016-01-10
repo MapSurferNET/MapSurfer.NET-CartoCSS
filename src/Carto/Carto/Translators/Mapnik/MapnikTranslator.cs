@@ -412,7 +412,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
             break;
           case "text-wrap-character":
             TextWrapping tw2 = textBlock.TextFormat.TextWrapping;
-            if (tw2.Characters == null)
+            if (tw2.Characters == null || tw2.Characters.Length == 0)
               tw2.Characters = new WrapCharacter[] { new WrapCharacter() };
             tw2.Characters[0].Character = values[i];
             break;

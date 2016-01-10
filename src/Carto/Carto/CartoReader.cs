@@ -519,8 +519,6 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       {
         CartoRule child = rules[j];
         string symName = cartoTranslator.GetSymbolizerName(child.Name);
-        if (symName == null)
-          continue;
 
         string key = child.Instance + "/" + symName;
         if ((zooms.Current & child.Zoom) != 0 &&
