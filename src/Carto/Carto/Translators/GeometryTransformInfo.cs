@@ -19,6 +19,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
     public string SimplifyAlgorithm { get; set; }
     public string Offset { get; set; }
     public string GeometryTransform { get; set; }
+    public bool OffsetCurve { get; set; }
     
     public bool IsEmpty
     {

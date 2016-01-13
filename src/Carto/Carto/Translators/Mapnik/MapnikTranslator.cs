@@ -451,6 +451,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
             break;
           case "text-placement":
             lpi.Placement = values[i];
+            if (lpi.Placement == "line")
+              geomTrans.OffsetCurve = true;
             break;
           case "text-placement-type":
             lpi.Properties.Add(new KeyValuePair<string, string>(prop, values[i]));
@@ -1136,14 +1138,19 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
     {
       if (source == null)
         throw new ArgumentNullException("source");
-      if (chars == null) throw new ArgumentNullException("chars");
+
+      if (chars == null)
+        throw new ArgumentNullException("chars");
+
       if (source.Length == 0) return -1;
       if (chars.Length == 0) return 0;
 
       for (int i = pos; i < source.Length; i++)
       {
-        if (chars.IndexOf(source[i]) == -1) return i;
+        if (chars.IndexOf(source[i]) == -1)
+          return i;
       }
+
       return -1;
     }
 
@@ -1249,7 +1256,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
           string dx = string.IsNullOrEmpty(gt.DisplacementX) ? "0" : gt.DisplacementX;
           string dy = string.IsNullOrEmpty(gt.DisplacementY) ? "0" : gt.DisplacementY;
 
-          expr = string.Format("GeometryTransformations.Offset({0}, {1}, {2})", expr, dx, dy);
+          if (gt.OffsetCurve)
+            expr = string.Format("GeometryTransformations.OffsetCurve({0}, {1}, 0)", expr, dy);
+          else
+            expr = string.Format("GeometryTransformations.Offset({0}, {1}, {2})", expr, dx, dy);
         }
 
         if (!string.IsNullOrEmpty(gt.Simplify))
