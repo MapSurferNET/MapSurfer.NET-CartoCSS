@@ -12,7 +12,7 @@ using OSGeo.OSR;
 
 namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 {
-  internal static class SpatialReferenceUtility
+  public static class SpatialReferenceUtility
   {
     private static ConcurrentDictionary<string, string> _srCache;
 
@@ -20,6 +20,20 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
     {
       _srCache = new ConcurrentDictionary<string, string>();
       MapSurfer.Data.GDAL.GDALWrapper.GDALEnvironment.Initialize();
+    }
+
+    public static string ToProj4(string wkt)
+    {
+      if (string.IsNullOrEmpty(wkt))
+        return wkt;
+
+      using (SpatialReference sr = new SpatialReference(wkt))
+      {
+        string res = null;
+        sr.ExportToProj4(out res);
+
+        return res;
+      }
     }
 
     public static string ToCoordinateSystem(string srs, bool isName)

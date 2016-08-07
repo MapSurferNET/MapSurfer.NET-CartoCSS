@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -106,7 +106,28 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Referencers
       return null;
     }
 
-    public bool HasRequiredProperties(string symbolizer, string[] properties, ref string missingProperty)
+    public bool IsSymbolizerPropertyValid(string symbolizer, NodePropertyValue property)
+    {
+      SymbolizerDescriptor symDesc = null;
+      if (m_typesDict.TryGetValue(symbolizer, out symDesc))
+      {
+        bool bFound = false;
+        foreach (string symProperty in symDesc.Properties.Keys)
+        {
+          if (string.Equals(symProperty, property.Name))
+          {
+            bFound = true;
+            break;
+          }
+        }
+
+        return bFound;
+      }
+
+      return false;
+    }
+
+    public bool HasRequiredProperties(string symbolizer, NodePropertyValue[] properties, ref string missingProperty)
     {
       SymbolizerDescriptor symDesc = null;
       if (m_typesDict.TryGetValue(symbolizer, out symDesc))
@@ -118,9 +139,9 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Referencers
           {
             bool bFound = false;
 
-            foreach (string prop in properties)
+            foreach (NodePropertyValue prop in properties)
             {
-              if (string.Equals(cpi.CssName, prop))
+              if (string.Equals(cpi.CssName, prop.Name))
               {
                 bFound = true;
                 break;

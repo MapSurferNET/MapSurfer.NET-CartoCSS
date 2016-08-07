@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -64,12 +64,14 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
     /// </summary>
     public void Fold(Env env)
     {
-        for (var i = 0; i < Definitions.Count; i++) 
+        for (int i = 0; i < Definitions.Count; i++) 
         {
-           for (var j = Definitions.Count - 1; j > i; j--) 
+           CartoDefinition defI = Definitions[i];
+           for (int j = Definitions.Count - 1; j > i; j--) 
            {
-              if (Definitions[j].Filters.CloneWith(Definitions[i].Filters, env) == null)
-                  Definitions.RemoveAt(j);
+            // if (Definitions[j].Filters.CloneWith(defI.Filters, env) == null) // Runge: replace with a bit faster version
+             if (Definitions[j].Filters.CanCloneWith(defI.Filters, env) == false)
+               Definitions.RemoveAt(j);
            }
         }    
     }

@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -13,12 +13,22 @@ using dotless.Core.Parser.Tree;
 
 using MapSurfer.Styling.Formats.CartoCSS.Parser.Tree;
 using MapSurfer.Styling.Formats.CartoCSS.Translators;
+using System.Globalization;
 
 namespace MapSurfer.Styling.Formats.CartoCSS
 {
   internal static class ConvertUtility
   {
-    public static string ToFilter(CartoFilterSet filterSet, ICartoTranslator cartoTranslator)
+    private static int POW_COUNT = 100;
+    private static float[] POSITIVE_EXPS = new float[POW_COUNT];
+    private static float[] NEGATIVE_EXPS = new float[POW_COUNT];
+
+    static ConvertUtility()
+    {
+
+    }
+
+    public static string ToFilter(CartoFilterSet filterSet, CartoReaderContext cntx)
     {
       string result = string.Empty;
 
@@ -30,7 +40,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
           if (i != 0)
             result += " and ";
 
-          result += cartoTranslator.ToFilter(filter.Key.ToString(), ToExpressionOperator(filter.Op), ToExpressionValue(filter.Value));
+          result += cntx.Translator.ToFilter(cntx.GetValue( filter.Key), ToExpressionOperator(filter.Op), ToExpressionValue(filter.Value, cntx));
           i++;
         }
       }
@@ -61,7 +71,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       }
     }
 
-    private static string ToExpressionValue(Node value)
+    private static string ToExpressionValue(Node value, CartoReaderContext cntx)
     {
       string result = null;
 
@@ -74,7 +84,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS
         if (quoted != null)
           result = QuoteValue(quoted.Value.ToString());
         else
-          result = value.ToString();
+          result = cntx.GetValue(value);
       }
 
       return result;
@@ -139,6 +149,78 @@ namespace MapSurfer.Styling.Formats.CartoCSS
       }
 
       return values;
+    }
+
+    /// <summary>
+    /// Very simple function for converting string objects to floats. This function is at least 2 times faster than float.TryParse
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool TryParseFloat(string str, NumberStyles style, IFormatProvider provider, out float value)
+    {
+      if (str == null)
+      {
+        value = 0.0F;
+        return false;
+      }
+
+      char c = str[0];
+
+      if (c != ' ')
+      {
+        int start = 0;
+        bool sign = true;
+
+        if (c < '0' || c > '9')
+        {
+          value = 0.0F;
+          return false;
+        }
+        else if (c == '-')
+        {
+          start++;
+          sign = false;
+        }
+        else if (c == '+')
+        {
+          start++;
+        }
+
+        try
+        {
+          float res = 0;
+
+          int decimal_pos = str.Length;
+          int length = decimal_pos;
+
+          for (int k = start; k < length; k++)
+          {
+            c = str[k];
+
+            if (c == '.')
+              decimal_pos = k + 1;
+            else if (c >= '0' && c <= '9')
+              res = (long)(res * 10) + (int)(c - '0');
+            else
+            {
+              return float.TryParse(str, style, provider, out value);
+            }
+          }
+
+          if (decimal_pos == length)
+            value = sign ? res : -res;
+          else
+            value = ((sign ? res : -res) / POSITIVE_EXPS[length - decimal_pos]);
+
+          return true;
+        }
+        catch
+        {
+        }
+      }
+
+      return float.TryParse(str, style, provider, out value);
     }
   }
 }

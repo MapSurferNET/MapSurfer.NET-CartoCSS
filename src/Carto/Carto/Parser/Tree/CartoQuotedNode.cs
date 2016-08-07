@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -19,10 +19,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 {
   internal class CartoQuotedNode: Quoted, IOperable
   {
-    public CartoQuotedNode(Quoted quoted) : this(quoted.Value, quoted.Escaped)
+    public CartoQuotedNode(Quoted quoted) : base(quoted.Value, quoted.Quote, quoted.Escaped)
     { }
 
-    public CartoQuotedNode(string value, bool escaped):base(value, escaped)
+    public CartoQuotedNode(string value, string contents, bool escaped) : base(value, contents, escaped)
     { }
 
     public Node Operate(Operation op, Node other)

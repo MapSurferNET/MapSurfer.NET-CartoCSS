@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.DatasourceParamerterConverters
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -23,7 +23,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.GeoServer
       m_referencer.Prepare();
     }
 
-    public override Symbolizer ToSymbolizer(string symbolizer, string[] properties, string[] values)
+    public override Symbolizer ToSymbolizer(string symbolizer, NodePropertyValue[] properties )
     {
       if (string.IsNullOrEmpty(symbolizer))
         return null;
@@ -34,21 +34,21 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.GeoServer
       switch (symbolizer)
       {
         case "LineSymbolizer":
-          return CreateLineSymbolizer(properties, values);
+          return CreateLineSymbolizer(properties);
         case "LinePatternSymbolizer":
-          return CreateLinePatternSymbolizer(properties, values);
+          return CreateLinePatternSymbolizer(properties);
         case "PolygonSymbolizer":
-          return CreatePolygonSymbolizer(properties, values);
+          return CreatePolygonSymbolizer(properties);
         case "TextSymbolizer":
-          return CreateTextSymbolizer(properties, values);
+          return CreateTextSymbolizer(properties);
         case "PointSymbolizer":
-          return CreatePointSymbolizer(properties, values);
+          return CreatePointSymbolizer(properties);
         case "GraphicTextSymbolizer":
-          return CreateGraphicTextSymbolizer(properties, values);
+          return CreateGraphicTextSymbolizer(properties);
         case "RasterSymbolizer":
-          return CreateRasterSymbolizer(properties, values);
+          return CreateRasterSymbolizer(properties);
         case "ExtrudedPolygonSymbolizer":
-          return CreateExtrudedPolygonSymbolizer(properties, values);
+          return CreateExtrudedPolygonSymbolizer(properties);
         default:
           break;
       }
@@ -56,47 +56,52 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.GeoServer
       return null;
     }
 
-    private LineSymbolizer CreateLineSymbolizer(string[] properties, string[] values)
+    private LineSymbolizer CreateLineSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private LinePatternSymbolizer CreateLinePatternSymbolizer(string[] properties, string[] values)
+    private LinePatternSymbolizer CreateLinePatternSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private PolygonSymbolizer CreatePolygonSymbolizer(string[] properties, string[] values)
+    private PolygonSymbolizer CreatePolygonSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private TextSymbolizer CreateTextSymbolizer(string[] properties, string[] values)
+    private TextSymbolizer CreateTextSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private GraphicTextSymbolizer CreateGraphicTextSymbolizer(string[] properties, string[] values)
+    private GraphicTextSymbolizer CreateGraphicTextSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private PointSymbolizer CreatePointSymbolizer(string[] properties, string[] values)
+    private PointSymbolizer CreatePointSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private RasterSymbolizer CreateRasterSymbolizer(string[] properties, string[] values)
+    private RasterSymbolizer CreateRasterSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    private ExtrudedPolygonSymbolizer CreateExtrudedPolygonSymbolizer(string[] properties, string[] values)
+    private ExtrudedPolygonSymbolizer CreateExtrudedPolygonSymbolizer(NodePropertyValue[] properties)
     {
       throw new NotImplementedException();
     }
 
-    public override ParameterCollection ToDatasourceParameters(CartoLayer layer)
+    public override ParameterCollection ToDatasourceParameters(CartoDatasource datasource)
+    {
+      throw new NotImplementedException();
+    }
+
+    public override CartoDatasource ToDatasource(ParameterCollection parameters)
     {
       throw new NotImplementedException();
     }
@@ -124,6 +129,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.GeoServer
     public override void ProcessStyles(FeatureTypeStyleCollection styles)
     {
     	throw new NotImplementedException();
+    }
+
+    public override bool IsFontSetProperty(string value)
+    {
+      throw new NotImplementedException();
     }
   }
 }

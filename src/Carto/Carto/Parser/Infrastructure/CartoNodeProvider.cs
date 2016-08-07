@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Infrastructure
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -176,7 +176,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Infrastructure
 
     public Quoted Quoted(string value, string contents, bool escaped, NodeLocation location)
     {
-      return new Quoted(value, contents, escaped) { Location = location };
+      return new CartoQuotedNode(value, contents, escaped) { Location = location };
     }
 
     public Paren Paren(Node value, NodeLocation location)

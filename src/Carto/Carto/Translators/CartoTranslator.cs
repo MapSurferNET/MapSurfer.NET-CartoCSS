@@ -13,7 +13,6 @@ using MapSurfer.Configuration;
 using MapSurfer.Drawing;
 using MapSurfer.Drawing.Drawing2D;
 using MapSurfer.Logging;
-using MapSurfer.Styling;
 
 using MapSurfer.Styling.Formats.CartoCSS.Translators.Referencers;
 
@@ -22,19 +21,104 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
   internal abstract class CartoTranslator : ICartoTranslator
   {
     protected ICartoPropertyReferencer m_referencer;
+    protected Logger m_logger;
 
     public Dictionary<string, FontSet> FontSets { get; set; }
 
-    public abstract Symbolizer ToSymbolizer(string symbolizer, string[] properties, string[] values);
+    public abstract Symbolizer ToSymbolizer(string symbolizer, NodePropertyValue[] properties);
 
     public string GetSymbolizerName(string property)
     {
       return m_referencer.GetSymbolizerName(property);
     }
 
-    public bool HasRequiredProperties(string symbolizer, string[] properties, ref string missingProperty)
+    public bool IsSymbolizerPropertyValid(string symbolizer, NodePropertyValue property)
+    {
+      return m_referencer.IsSymbolizerPropertyValid(symbolizer, property);
+    }
+
+    public bool HasRequiredProperties(string symbolizer, NodePropertyValue[] properties, ref string missingProperty)
     {
       return m_referencer.HasRequiredProperties(symbolizer, properties, ref missingProperty);
+    }
+
+    public abstract bool IsFontSetProperty(string value);
+
+    public string ToCompositingOperation(CompositingMode mode)
+    {
+      switch (mode)
+      {
+        case CompositingMode.Clear:
+          return "clear";
+        case CompositingMode.Source:
+          return "src";
+        case CompositingMode.Destination:
+          return "dst";
+        case CompositingMode.SourceOver:
+          return "src-over";
+        case CompositingMode.DestinationOver:
+          return "dst-over";
+        case CompositingMode.SourceIn:
+          return "src-in";
+        case CompositingMode.DestinationIn:
+          return "dst-in";
+        case CompositingMode.SourceOut:
+          return "src-out";
+        case CompositingMode.DestinationOut:
+          return "dst-out";
+        case CompositingMode.SourceATop:
+          return "src-atop";
+        case CompositingMode.DestinationATop:
+          return "dst-atop";
+        case CompositingMode.Xor:
+          return "xor";
+        case CompositingMode.Plus:
+          return "plus";
+        case CompositingMode.Minus:
+          return "minus";
+        case CompositingMode.Multiply:
+          return "multiply";
+        case CompositingMode.Screen:
+          return "screen";
+        case CompositingMode.Overlay:
+          return "overlay";
+        case CompositingMode.Darken:
+          return "darken";
+        case CompositingMode.Lighten:
+          return "lighten";
+        case CompositingMode.ColorDodge:
+          return "color-dodge";
+        case CompositingMode.ColorBurn:
+          return "color-burn";
+        case CompositingMode.HardLight:
+          return "hard-light";
+        case CompositingMode.SoftLight:
+          return "soft-light";
+        case CompositingMode.Difference:
+          return "difference";
+        case CompositingMode.Exclusion:
+          return "exclusion";
+        case CompositingMode.Contrast:
+          return "contrast";
+        case CompositingMode.Invert:
+          return "invert";
+        case CompositingMode.InvertRGB:
+          return "invert-rgb";
+        case CompositingMode.GrainMerge:
+          return "grain-merge";
+        case CompositingMode.GrainExtract:
+          return "grain-extract";
+        case CompositingMode.Hue:
+          return "hue";
+        case CompositingMode.Saturation:
+          return "saturation";
+        case CompositingMode.Color:
+          return "color";
+        case CompositingMode.Value:
+          return "value";
+        default:
+          return "src-over";
+      }
     }
 
     public CompositingMode ToCompositingMode(string comp)
@@ -114,6 +198,41 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
       }
     }
 
+    public ImageResamplingMode ToImageResamplingMode(string mode)
+    {
+      switch (mode.ToLower())
+      {
+        case "near":
+          return ImageResamplingMode.NearestNeighbor;
+        case "fast":
+          return ImageResamplingMode.Low;
+        case   "bilinear":
+          return ImageResamplingMode.Bilinear;
+        case "bilinear8":
+          return ImageResamplingMode.HighQualityBilinear;
+        case "bicubic":
+          return ImageResamplingMode.Bicubic;
+          // not supported 
+        case "spline16":
+        case "spline36":
+        case "hanning":
+        case "hamming":
+        case "hermite":
+        case "kaiser":
+        case "quadric":
+        case "catrom":
+        case "gaussian":
+        case "bessel":
+        case "mitchell":
+        case "sinc":
+        case "lanczos":
+        case "blackman":
+          return ImageResamplingMode.Default;
+      }
+
+      return ImageResamplingMode.Default;
+    }
+
     public string ToCoordinateSystem(string srs, bool isName = false)
     {
       try
@@ -128,7 +247,9 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
       return null;
     }
 
-    public abstract ParameterCollection ToDatasourceParameters(CartoLayer layer);
+    public abstract ParameterCollection ToDatasourceParameters(CartoDatasource datasource);
+
+    public abstract CartoDatasource ToDatasource(ParameterCollection parameters);
 
     public abstract string ToImageFilter(string filter);
 
@@ -137,5 +258,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
     public abstract string ToFilter(string key, string op, string value);
     
     public abstract void ProcessStyles(FeatureTypeStyleCollection styles);
+
+    public void SetLogger(Logger logger)
+    {
+      m_logger = logger;
+    }
   }
 }

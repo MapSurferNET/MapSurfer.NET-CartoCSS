@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -16,7 +16,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
   internal class CartoInvalidElement : Element
   {
     public CartoInvalidElement(Combinator combinator, string text)
-      : base(combinator, "Invalid code: " + text)
+      : base(combinator, "Invalid property or value: '" + text +"'")
     {
     }
   }

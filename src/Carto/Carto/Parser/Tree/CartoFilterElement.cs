@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -10,7 +10,6 @@
 //
 //==========================================================================================
 using System;
-using System.Linq;
 
 using dotless.Core.Parser.Tree;
 using dotless.Core.Parser.Infrastructure.Nodes;
@@ -23,6 +22,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
     private Node m_key;
     private Node m_op;
     private Node m_value;
+    private string m_strValue;
     private string m_id;
 
     public CartoFilterElement(Node key, Node op, Node value, Combinator combinator, Env env)
@@ -32,7 +32,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       m_op = op;
       m_value = value;
 
-      m_id = "["+m_key.ToString() + "]" + m_op.ToString() + m_value.ToCSS(env).ToString();
+      m_id = "[" + m_key.ToString() + "]" + m_op.ToString() + m_value.ToCSS(env).ToString();
     }
 
     public Node Key
@@ -63,18 +63,26 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 
     public string GetValue(Env env)
     {
-      return m_value.ToCSS(env);
+      if (m_strValue == null)
+        m_strValue = m_value.ToCSS(env);
+
+      return m_strValue;
     }
 
     public float GetValueF(Env env)
     {
-      return Convert.ToSingle(m_value.ToCSS(env));
+      return Convert.ToSingle(GetValue(env));
     }
 
     public bool Contains(string key)
     {
       string key2 = m_key.ToString() + m_op;
       return (string.Equals(key2, key));
+    }
+
+    public bool Contains(string key, string op)
+    {
+      return (string.Equals(m_key.ToString(), key) && string.Equals(m_op.ToString(), op));
     }
   }
 }

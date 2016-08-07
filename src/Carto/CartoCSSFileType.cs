@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -20,12 +20,12 @@ namespace MapSurfer.Styling.Formats.CartoCSS
     /// Initializes a new instance of the class <see cref="MpaSurfer.Styling.Formats.CartoCSS.CartoCSSFileType"/>.
     /// </summary>
     public CartoCSSFileType()
-      : base("CartoCSS", new string[] { ".mml" }, FileTypeFlags.ReadSupport)
+      : base("CartoCSS", new string[] { ".mml", ".yaml", ".yml" }, FileTypeFlags.ReadSupport)
     {
 
     }
 
-    protected override Map OnLoad(Stream input, ProgressEventHandler callback, object userInfo)
+    protected override Map OnLoad(Stream input, IProgressIndicator progress, object userInfo)
     {
       object[] objArray = (object[])userInfo;
       string fileName = (string)objArray[0];
@@ -34,15 +34,17 @@ namespace MapSurfer.Styling.Formats.CartoCSS
 
       using (StreamReader sr = new StreamReader(input))
       {
-        return CartoReader.ReadFromFile(sr.ReadToEnd(), fileName);
+        CartoProject cartoProject = CartoProject.FromFile(sr.ReadToEnd(), Path.GetExtension(fileName));
+        return CartoProcessor.GetMap(cartoProject, Path.GetDirectoryName(fileName), progress);
       }
     }
 
-    public new Map Load(string fileName, ProgressEventHandler callback, object userInfo)
+    public new Map Load(string fileName, IProgressIndicator progress, object userInfo)
     {
-  //    LogFactory.WriteLogEntry(Logger.Default, string.Format("Loading CartoCSS project from '{0}' ...", fileName), LogEntryType.Information);
+      //    LogFactory.WriteLogEntry(Logger.Default, string.Format("Loading CartoCSS project from '{0}' ...", fileName), LogEntryType.Information);
 
-      return CartoReader.ReadFromFile(File.ReadAllText(fileName), fileName);
+      CartoProject cartoProject = CartoProject.FromFile(File.ReadAllText(fileName), Path.GetExtension(fileName));
+      return CartoProcessor.GetMap(cartoProject, Path.GetDirectoryName(fileName), progress);
     }
 
     public override Bitmap GetThumbnail(string fileName)

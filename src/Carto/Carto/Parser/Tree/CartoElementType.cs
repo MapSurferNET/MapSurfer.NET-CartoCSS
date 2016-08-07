@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -13,7 +13,7 @@ using System;
 
 namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 {
-  public enum ElementType : byte
+  internal enum ElementType : byte
   {
     Unknown,
     Class,

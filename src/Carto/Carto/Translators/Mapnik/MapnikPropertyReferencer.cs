@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -70,6 +70,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("marker-transform"),
         new CartoPropertyInfo("marker-clip"),
         new CartoPropertyInfo("marker-smooth"),
+        new CartoPropertyInfo("marker-simplify"),
+        new CartoPropertyInfo("marker-simplify-algorithm"),
         new CartoPropertyInfo("marker-geometry-transform"),
         new CartoPropertyInfo("marker-comp-op"),
       });
@@ -92,6 +94,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("shield-wrap-before"),
         new CartoPropertyInfo("shield-wrap-character"),
         new CartoPropertyInfo("shield-halo-fill"),
+        new CartoPropertyInfo("shield-halo-opacity"),
         new CartoPropertyInfo("shield-halo-radius"),
         new CartoPropertyInfo("shield-character-spacing"),
         new CartoPropertyInfo("shield-line-spacing"),
@@ -108,6 +111,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("shield-transform"),
         new CartoPropertyInfo("shield-clip"),
         new CartoPropertyInfo("shield-comp-op"),
+        new CartoPropertyInfo("shield-unlock-image"),
+        new CartoPropertyInfo("shield-smooth"),
+        new CartoPropertyInfo("shield-simplify"),
+        new CartoPropertyInfo("shield-simplify-simplify")
       });
 
       // LinePatternSymbolizer
@@ -139,7 +146,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("raster-filter-factor"),
         new CartoPropertyInfo("raster-scaling"),
         new CartoPropertyInfo("raster-mesh-size"),
-        new CartoPropertyInfo("raster-comp-op")
+        new CartoPropertyInfo("raster-comp-op"),
+        new CartoPropertyInfo("raster-colorizer-default-mode"),
+        new CartoPropertyInfo("raster-colorizer-default-color"),
+        new CartoPropertyInfo("raster-colorizer-epsilon"),
+        new CartoPropertyInfo("raster-colorizer-stops")
       });
 
       AddTypeProperty(typeof(PointSymbolizer), "point", new CartoPropertyInfo[] {
@@ -169,6 +180,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("text-fill"),
         new CartoPropertyInfo("text-opacity"),
         new CartoPropertyInfo("text-halo-fill"),
+        new CartoPropertyInfo("text-halo-opacity"),
         new CartoPropertyInfo("text-halo-radius"),
         new CartoPropertyInfo("text-halo-rasterizer"),
         new CartoPropertyInfo("text-dx"),
@@ -189,6 +201,9 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Mapnik
         new CartoPropertyInfo("text-align"),
         new CartoPropertyInfo("text-clip"),
         new CartoPropertyInfo("text-comp-op"),
+        new CartoPropertyInfo("text-smooth"),
+        new CartoPropertyInfo("text-simplify"),
+        new CartoPropertyInfo("text-simplify-algorithm")
       });
 
       // ExtrudedPolygonSymbolizer

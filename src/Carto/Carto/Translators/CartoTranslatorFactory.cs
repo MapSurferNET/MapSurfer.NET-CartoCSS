@@ -15,6 +15,11 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 
   internal static class CartoGeneratorConverterFactory
   {
+    public static ICartoTranslator CreateTranslator(object name)
+    {
+      return CreateTranslator(name as string);
+    }
+
     public static ICartoTranslator CreateTranslator(string name)
     {
       if (string.IsNullOrEmpty(name))
@@ -28,6 +33,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
           return new MapnikTranslator();
         case "geoserver":
           return new GeoServerTranslator();
+        default:
+          return new MapnikTranslator();
       }
 
       throw new Exception("Unknown translator with name '" + name +  "'");

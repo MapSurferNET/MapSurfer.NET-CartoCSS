@@ -36,7 +36,12 @@
             Inner = new List<TNode>();
         }
 
-        public NodeList(params TNode[] nodes)
+    public NodeList(int size) // Runge
+    {
+      Inner = new List<TNode>(size);
+    }
+
+    public NodeList(params TNode[] nodes)
             : this((IEnumerable<TNode>) nodes)
         {
         }

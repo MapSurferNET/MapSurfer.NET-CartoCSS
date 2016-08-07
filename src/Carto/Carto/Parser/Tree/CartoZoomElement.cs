@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -76,16 +76,16 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       int maxZoom = int.MaxValue;
       m_zoom = 0;
 
-      m_value.Evaluate(env);
+     Node node = m_value.Evaluate(env);
       
-      Number number = m_value as Number;
+      Number number = node as Number;
 
       int value = 0;
     
       if (number != null) 
       	value =  Convert.ToInt32(number.ToNumber());
       else
-      	value =  Convert.ToInt32(m_value.ToString());
+      	value =  Convert.ToInt32(node.ToString());
 
       if (value > MAX_ZOOM || value < 0)
         throw new Exception(string.Format("Zoom '{0}' level is out of range", value));

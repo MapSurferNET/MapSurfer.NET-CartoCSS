@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -55,7 +55,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       {
         if (elem is CartoFilterElement)
         {
-         m_filters.Add(elem as CartoFilterElement, env);
+          m_filters.Add(elem as CartoFilterElement, env);
           m_conditions++;
         }
         else if (elem is CartoZoomElement)

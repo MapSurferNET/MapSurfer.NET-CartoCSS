@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -47,7 +47,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
 
     public CartoDefinition(CartoDefinition def, CartoFilterSet filters, Env env)
     {
-      m_rules = new NodeList<CartoRule>(CreateCopy(def.Rules));
+      m_rules = CreateCopy(def.Rules);
       m_elements = new NodeList<CartoElement>(def.m_elements);
       m_ruleIndex = new List<string>(def.m_ruleIndex);
       m_filters = filters != null ? filters : (CartoFilterSet)def.Filters.Clone(env);
@@ -156,10 +156,13 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       return true;
     }
 
-    private IEnumerable<CartoRule> CreateCopy(NodeList<CartoRule> rules)
+    private NodeList<CartoRule> CreateCopy(NodeList<CartoRule> rules)
     {
+      NodeList<CartoRule> list = new NodeList<CartoRule>(rules.Count);
       for (int j = 0; j < rules.Count; j++)
-         yield return (CartoRule)rules[j].Clone();
+        list.Add((CartoRule)rules[j].Clone());
+
+      return list;
     }
 
     public override string ToString()

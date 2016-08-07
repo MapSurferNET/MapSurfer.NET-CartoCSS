@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MapSurfer.Styling.CartoCSS</RootNamespace>
     <AssemblyName>MapSurfer.Styling.CartoCSS</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -73,51 +73,52 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="GeoAPI, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\GeoAPI.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\GeoAPI.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="MapSurfer.Core, Version=2.40.5827.36048, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Core.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="MapSurfer.Core, Version=2.50.6047.3032, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MapSurfer.Data">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Data.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Data.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MapSurfer.Data.GDALWrapper">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Data.GDALWrapper.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Data.GDALWrapper.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MapSurfer.Drawing">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Drawing.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Drawing.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MapSurfer.Geometries, Version=2.40.5827.36039, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Geometries.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="MapSurfer.Geometries, Version=2.50.6047.3019, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Geometries.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="MapSurfer.Logging">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Logging.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Logging.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="MapSurfer.Projections">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Projections.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Projections.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="MapSurfer.System, Version=2.40.5827.36023, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.System.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="MapSurfer.System, Version=2.50.6047.2988, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.System.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="osr_csharp">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\osr_csharp.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\osr_csharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ProjNet">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\ProjNet.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\ProjNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="YamlDotNet">
@@ -130,44 +131,52 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartoCSSFileType.cs" />
+    <Compile Include="CartoCSSFileTypeFactory.cs" />
+    <Compile Include="Carto\CartoProcessor.cs" />
+    <Compile Include="Carto\CartoProject.cs" />
+    <Compile Include="Carto\CartoProjectType.cs" />
+    <Compile Include="Carto\CartoReaderContext.cs" />
+    <Compile Include="Carto\ConvertUtility.cs" />
+    <Compile Include="Carto\Exceptions\CartoException.cs" />
+    <Compile Include="Carto\Exceptions\NotSupportedPropertyException.cs" />
+    <Compile Include="Carto\Exceptions\ParsingException.cs" />
+    <Compile Include="Carto\NodePropertyValue.cs" />
+    <Compile Include="Carto\Parser\CartoParser.cs" />
+    <Compile Include="Carto\Parser\CartoParsers.cs" />
+    <Compile Include="Carto\Parser\Infrastructure\CartoNodeProvider.cs" />
+    <Compile Include="Carto\Parser\LessExtensions.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoAttachmentElement.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoDefinition.cs" />
     <Compile Include="Carto\Parser\Tree\CartoDimension.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoElement.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoElementType.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoFieldNode.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoFilterElement.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoFilterSet.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoInvalidElement.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoQuotedNode.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoRule.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoSelector.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoStyle.cs" />
+    <Compile Include="Carto\Parser\Tree\CartoZoomElement.cs" />
+    <Compile Include="Carto\Parser\Tree\ISpecificity.cs" />
     <Compile Include="Carto\Translators\CartoTranslator.cs" />
     <Compile Include="Carto\Translators\CartoTranslatorFactory.cs" />
     <Compile Include="Carto\Translators\GeometryTransformInfo.cs" />
     <Compile Include="Carto\Translators\GeoServer\GeoServerPropertyReferencer.cs" />
-    <Compile Include="Carto\Translators\ICartoTranslator.cs" />
     <Compile Include="Carto\Translators\GeoServer\GeoServerTranslator.cs" />
+    <Compile Include="Carto\Translators\ICartoTranslator.cs" />
     <Compile Include="Carto\Translators\LabelPlacementInfo.cs" />
+    <Compile Include="Carto\Translators\Mapnik\MapnikPropertyReferencer.cs" />
     <Compile Include="Carto\Translators\Mapnik\MapnikTranslator.cs" />
-    <Compile Include="Carto\Translators\SpatialReferenceUtility.cs" />
-    <Compile Include="Carto\ConvertUtility.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoStyle.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoFilterSet.cs" />
-    <Compile Include="Carto\Parser\CartoParser.cs" />
-    <Compile Include="Carto\Parser\CartoParsers.cs" />
-    <Compile Include="Carto\CartoReader.cs" />
-    <Compile Include="CartoCSSFileType.cs" />
-    <Compile Include="CartoCSSFileTypeFactory.cs" />
-    <Compile Include="Carto\CartoProject.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoAttachmentElement.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoInvalidElement.cs" />
-    <Compile Include="Carto\Parser\Infrastructure\CartoNodeProvider.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoSelector.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoDefinition.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoElementType.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoFilterElement.cs" />
-    <Compile Include="Carto\Parser\Tree\ISpecificity.cs" />
-    <Compile Include="Carto\Parser\LessExtensions.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoRule.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoElement.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoZoomElement.cs" />
     <Compile Include="Carto\Translators\Referencers\CartoPropertyInfo.cs" />
     <Compile Include="Carto\Translators\Referencers\CartoPropertyReferencer.cs" />
     <Compile Include="Carto\Translators\Referencers\ICartoPropertyReferencer.cs" />
-    <Compile Include="Carto\Translators\Mapnik\MapnikPropertyReferencer.cs" />
+    <Compile Include="Carto\Translators\SpatialReferenceUtility.cs" />
+    <Compile Include="ComponentModel\ResourceLoader.cs" />
+    <Compile Include="ComponentModel\SR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoQuotedNode.cs" />
-    <Compile Include="Carto\Parser\Tree\CartoFieldNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

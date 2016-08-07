@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -13,11 +13,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using dotless.Core.Parser;
 using dotless.Core.Parser.Tree;
 using dotless.Core.Parser.Infrastructure.Nodes;
 using dotless.Core.Parser.Infrastructure;
 
 using MapSurfer.Styling.Formats.CartoCSS.Parser.Tree;
+using MapSurfer.IO;
+using MapSurfer.Styling.Formats.CartoCSS.Exceptions;
 
 namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 {
@@ -67,7 +70,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 			}
 		}
 
-		public static List<CartoDefinition> Flatten(this Ruleset ruleset, List<CartoDefinition> result, NodeList<CartoSelector> parents, Env env)
+		public static List<CartoDefinition> Flatten(this Ruleset ruleset, List<CartoDefinition> result, NodeList<CartoSelector> parents, Env env, Logging.Logger logger)
 		{
 			NodeList<CartoSelector> selectors = GetCartoSelectors(ruleset);
 			NodeList<CartoSelector> selectorsResult = new NodeList<CartoSelector>();
@@ -137,11 +140,13 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 			foreach (dotless.Core.Parser.Infrastructure.Nodes.Node rule in ruleset.Rules) {
 				// Recursively flatten any nested rulesets
 				if (rule is Ruleset) {
-					List<CartoDefinition> defs = Flatten(rule as Ruleset, result, selectorsResult, env);
+					List<CartoDefinition> defs = Flatten(rule as Ruleset, result, selectorsResult, env, logger);
 				} else if (rule is CartoRule) {
 					rules.Add(rule as CartoRule);
 				} else if (rule as CartoInvalidElement) {
-					env.Logger.Log(dotless.Core.Loggers.LogLevel.Error, "Rule");
+          CartoInvalidElement cie = rule as CartoInvalidElement;
+          env.Logger.Log(dotless.Core.Loggers.LogLevel.Error, "Rule");
+          Logging.LogFactory.WriteLogEntry(logger, new ParsingException(cie.Value, cie.Location.FileName, Zone.GetLineNumber(cie.Location)));
 				}
 			}
 
@@ -180,18 +185,6 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 			}
 
 			return selectors;
-		}
-
-		public static string GetValueAsString(this Node value, Env env)
-		{
-			Node v = value.Evaluate(env);
-
-			Color clr = v as Color;
-			if (clr != null) {
-				return clr.ToArgb();
-			}
-
-			return v.ToCSS(env);
 		}
 	}
 }

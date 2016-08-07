@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -56,12 +56,15 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
   using dotless.Core.Parser.Tree;
   using System;
   using System.Linq;
+  using System.Text.RegularExpressions;
 
   internal class CartoParsers
   {
     public INodeProvider NodeProvider { get; set; }
     public Env Env { get; set; }
 
+    private Regex _attributeNameRegex = new Regex("(\"\\[(.*?)\\]\")|\'\\[(.*?)\\]\'", RegexOptions.Compiled);
+      
     public CartoParsers(INodeProvider nodeProvider, Env env)
     {
       NodeProvider = nodeProvider;
@@ -218,7 +221,26 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
       if (str == null)
         return null;
 
-      Quoted q = NodeProvider.Quoted(str, str.Substring(1, str.Length - 2), escaped, parser.Tokenizer.GetNodeLocation(index));
+      Quoted q = null;
+      if (quote == '"' && _attributeNameRegex.IsMatch(str))
+      {
+        q = NodeProvider.Quoted(str, str.Trim('"'), escaped, parser.Tokenizer.GetNodeLocation(index));
+        q.Quote = null;
+      } else if (quote == '\'' && _attributeNameRegex.IsMatch(str))
+      {
+        q = NodeProvider.Quoted(str, str.Trim('\''), escaped, parser.Tokenizer.GetNodeLocation(index));
+        q.Quote = null;
+      }
+      else
+      {
+        if (str == "\"''\"")
+          str = "\"\"";
+        q = NodeProvider.Quoted(str, str.Substring(1, str.Length - 2), escaped, parser.Tokenizer.GetNodeLocation(index));
+        // if (q.Quote == '\'') 
+        //   q.Quote = '\"';
+        q.Quote = null;
+      }
+
       return new CartoQuotedNode(q);
     }
 
@@ -358,7 +380,10 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       Expect(parser, ')');
 
-      return NodeProvider.Url(value is Variable ? value : new Quoted(value.ToCSS(Env), false), parser.Importer, parser.Tokenizer.GetNodeLocation(index));
+      if (value == null)
+        return NodeProvider.Url(new Quoted(string.Empty, true), parser.Importer, parser.Tokenizer.GetNodeLocation(index));
+      else
+        return NodeProvider.Url(value is Variable ? value : new Quoted(value.ToCSS(Env), false), parser.Importer, parser.Tokenizer.GetNodeLocation(index));
     }
 
     //
@@ -978,8 +1003,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
           parser.Tokenizer.Advance(1);
 
-          if (key != null)
-            key = new CartoFieldNode(key.ToString());
+          //if (key != null)
+         //   key = new CartoFieldNode(key.ToString());
 
           return new CartoFilterElement(key, op, value, Combinator(parser), Env);
         }
@@ -1015,7 +1040,7 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
       var index = parser.Tokenizer.Location.Index;
 
-      if (comp = parser.Tokenizer.Match(@"^=~|=|!=|<=|>=|<|>"))
+      if (comp = parser.Tokenizer.Match(@"^=~|=|!=|<=|>=|<|>|%"))
         return NodeProvider.TextNode(comp.ToString(), parser.Tokenizer.GetNodeLocation(index));
 
       return null;
@@ -1193,12 +1218,15 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser
 
     public CartoInvalidElement Invalid(CartoParser parser)
     {
+      NodeLocation loc = parser.Tokenizer.GetNodeLocation();
       var match = parser.Tokenizer.Match("^[^;\n]*[;\n]");
 
       // To fail gracefully, match everything until a semicolon or linebreak.
       if (match != null)
       {
-        return new CartoInvalidElement(Combinator(parser), match.Value);
+        CartoInvalidElement cie = new CartoInvalidElement(Combinator(parser), match.Value);
+        cie.Location = loc;
+        return cie;
       }
 
       return null;

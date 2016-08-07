@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 //
@@ -14,7 +14,9 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators.Referencers
   {
     string GetSymbolizerName(string property);
 
-    bool HasRequiredProperties(string symbolizer, string[] properties, ref string missingProperty);
+    bool IsSymbolizerPropertyValid(string symbolizer, NodePropertyValue property);
+
+    bool HasRequiredProperties(string symbolizer, NodePropertyValue[] properties, ref string missingProperty);
 
     void Prepare();
   }

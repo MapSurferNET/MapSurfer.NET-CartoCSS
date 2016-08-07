@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -47,17 +47,19 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
     public CartoDimension(Node value, string unit, NodeLocation index) :
       base(value.ToCSS(new Env()), unit)
     {
-      //	Value = ParseFloat(value);
-      //	Unit = unit;
       m_index = index;
+
+      if ("px".Equals(unit))
+        Unit = unit.Replace("px", string.Empty);
     }
 
     public CartoDimension(string value, string unit, NodeLocation index) :
       base(value, unit)
     {
-      //Value = Convert.ToSingle(value);
-      //Unit = unit;
       m_index = index;
+
+      if ("px".Equals(unit))
+        Unit = unit.Replace("px", string.Empty);
     }
 
     public float Round()

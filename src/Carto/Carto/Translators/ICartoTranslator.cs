@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using MapSurfer.Drawing;
 using MapSurfer.Configuration;
 using MapSurfer.Drawing.Drawing2D;
-using MapSurfer.Styling;
+using MapSurfer.Logging;
 
 namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 {
@@ -22,22 +22,34 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Translators
 
     string GetSymbolizerName(string property);
 
-    bool HasRequiredProperties(string symbolizer, string[] properties, ref string missingProperty);
+    bool IsSymbolizerPropertyValid(string symbolizer, NodePropertyValue property);
 
-    Symbolizer ToSymbolizer(string symbolizer, string[] properties, string[] values);
+    bool HasRequiredProperties(string symbolizer, NodePropertyValue[] properties, ref string missingProperty);
+
+    bool IsFontSetProperty(string value);
+
+    Symbolizer ToSymbolizer(string symbolizer, NodePropertyValue[] properties);
 
     CompositingMode ToCompositingMode(string comp);
 
+    string ToCompositingOperation(CompositingMode mode);
+
     string ToCoordinateSystem(string srs, bool name = false);
 
-    ParameterCollection ToDatasourceParameters(CartoLayer layer);
+    ParameterCollection ToDatasourceParameters(CartoDatasource datasource);
+
+    CartoDatasource ToDatasource(ParameterCollection parameters);
 
     string ToImageFilter(string filter);
 
     string ToPath(string url);
     
     string ToFilter(string key, string op, string value);
+
+    ImageResamplingMode ToImageResamplingMode(string mode);
     
     void ProcessStyles(FeatureTypeStyleCollection styles);
+
+    void SetLogger(Logger logger);
   }
 }

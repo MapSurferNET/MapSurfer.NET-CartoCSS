@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MapSurfer.Styling.CartoCSS.Tests</RootNamespace>
     <AssemblyName>MapSurfer.Styling.CartoCSS.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -37,25 +38,25 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="GeoAPI, Version=1.1.0.0, Culture=neutral, PublicKeyToken=a1a0da7def465678, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\GeoAPI.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\GeoAPI.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MapSurfer.Core, Version=2.40.5827.36048, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MapSurfer.Core, Version=2.40.5784.20161, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Core.dll</HintPath>
     </Reference>
     <Reference Include="MapSurfer.Data, Version=2.40.5784.20159, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Data.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Data.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MapSurfer.Drawing, Version=2.40.5784.20153, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.Drawing.dll</HintPath>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.Drawing.dll</HintPath>
     </Reference>
-    <Reference Include="MapSurfer.System, Version=2.40.5827.36023, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MapSurfer.NET.Core.2.4\lib\net45\Core\MapSurfer.System.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="MapSurfer.System, Version=2.40.5784.20144, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MapSurfer.NET.Core.2.5\lib\net46\Core\MapSurfer.System.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

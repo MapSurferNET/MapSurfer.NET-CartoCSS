@@ -2,15 +2,16 @@ using System.Diagnostics;
 
 namespace dotless.Core.Parser
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using Exceptions;
-    using Infrastructure.Nodes;
-    using Utils;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text;
+  using System.Text.RegularExpressions;
+  using Exceptions;
+  using Infrastructure.Nodes;
+  using Utils;
+  using System;
 
-    [DebuggerDisplay("{Remaining}")]
+  [DebuggerDisplay("{Remaining}")]
     public class Tokenizer
     {
         public int Optimization { get; set; }
@@ -52,7 +53,7 @@ namespace dotless.Core.Parser
                 _chunks.Add(new Chunk(_input));
             else
             {
-                var skip = new Regex(@"\G(@\{[a-zA-Z0-9_-]+\}|[^\""'{}/\\\(\)]+)");
+                var skip = new Regex(@"\G(@\{[a-zA-Z0-9_-]+\}|[^\""'{}/\\\(\)]+)", RegexOptions.Compiled);
 
                 var comment = GetRegex(this._commentRegEx, RegexOptions.None);
                 var quotedstring = GetRegex(this._quotedRegEx, RegexOptions.None);
@@ -258,37 +259,46 @@ namespace dotless.Core.Parser
             return Match(tok, false);
         }
 
-        public RegexMatchResult Match(string tok, bool caseInsensitive)
-        {
-            if (_i == _inputLength || _chunks[_j].Type != ChunkType.Text) {
-                return null;
-            }
+    public RegexMatchResult Match(string tok, bool caseInsensitive)
+    {
+      if (_i == _inputLength || _chunks[_j].Type != ChunkType.Text)
+      {
+        return null;
+      }
 
-            var options = RegexOptions.None;
-            if (caseInsensitive)
-                options |= RegexOptions.IgnoreCase;
+      Match match = null;
 
-            var regex = GetRegex(tok, options);
+      try
+      {
+        var options = RegexOptions.None;
+        if (caseInsensitive)
+          options |= RegexOptions.IgnoreCase;
 
-          // Runge
-          string strValue = _chunks[_j].Value;
-          string str = strValue.Substring(_i-_current, strValue.Length - (_i - _current));
+        var regex = GetRegex(tok, options);
 
-          var match = regex.Match(str);
+        // Runge
+        string strValue = _chunks[_j].Value;
+        string str = strValue.Substring(_i - _current, strValue.Length - (_i - _current));
 
+        match = regex.Match(str);
+      }
+      catch (Exception ex)
+      {
+        throw new ParserException(ex.Message, ex, new Zone(GetNodeLocation(_i)));
+      }
 
-            // original
-             //var match = regex.Match(_chunks[_j].Value, _i - _current);
+      // original
+      //var match = regex.Match(_chunks[_j].Value, _i - _current);
 
-            if (!match.Success)
-                return null;
+      if (!match.Success)
+        return null;
 
-            var index = _i;
+      var index = _i;
 
-            Advance(match.Length);
+      Advance(match.Length);
 
-            return new RegexMatchResult(match) {Location = GetNodeLocation(index)};
-        }
+      return new RegexMatchResult(match) { Location = GetNodeLocation(index) };
+    }
 
         // Match a string, but include the possibility of matching quoted and comments
         public RegexMatchResult MatchAny(string tok)

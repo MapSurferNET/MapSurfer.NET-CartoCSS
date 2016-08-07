@@ -1,7 +1,7 @@
 ﻿//==========================================================================================
 //
 //		MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
-//		Copyright (c) 2008-2015, MapSurfer.NET
+//		Copyright (c) 2008-2016, MapSurfer.NET
 //
 //    Authors: Maxim Rylov
 // 
@@ -43,8 +43,8 @@ namespace MapSurfer.Styling.Formats.CartoCSS.Parser.Tree
       : base(name, value, variadic)
     {
       m_parts = name.Split('/');
-      Name = m_parts.Last();
-      m_instance = m_parts.Length >= 2 ? m_parts[m_parts.Length - 2] : "__default__";
+      Name = m_parts.Last().Trim();
+      m_instance = m_parts.Length >= 2 ? m_parts[m_parts.Length - 2].Trim() : "__default__";
 
       UpdateID();
     }
